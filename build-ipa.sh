@@ -3,11 +3,12 @@ set -ex
 
 TMPDIR=$(mktemp -d -p /var/tmp)
 TMPDIR_RAMDISK=$(mktemp -d -p /var/tmp)
-IPA_RAMDISK_VERSION=$(rpm -q --queryformat "%{VERSION}-%{RELEASE}" rhosp-director-images-ipa-x86_64)
+IPA_RAMDISK_ARCH=$(uname -m)
+IPA_RAMDISK_VERSION=$(rpm -q --queryformat "%{VERSION}-%{RELEASE}" rhosp-director-images-ipa-${IPA_RAMDISK_ARCH})
 
 chmod 755 $TMPDIR $TMPDIR_RAMDISK
 cd $TMPDIR
-tar -xf /usr/share/rhosp-director-images/ironic-python-agent-${IPA_RAMDISK_VERSION}.$(uname -m).tar
+tar -xf /usr/share/rhosp-director-images/ironic-python-agent-${IPA_RAMDISK_VERSION}.${IPA_RAMDISK_ARCH}.tar
 cd $TMPDIR_RAMDISK
 /usr/lib/dracut/skipcpio $TMPDIR/ironic-python-agent.initramfs | zcat | cpio -ivd
 # NOTE(elfosardo) we could inject a list of packages that we want to add, based
