@@ -11,21 +11,13 @@ FFILENAME=$FILENAME$FILENAME_EXT
 mkdir -p /shared/html/images /shared/tmp
 cd /shared/html/images
 
-TMPDIR=$(mktemp -d -p /shared/tmp)
-
 # Is this a RHEL based image? If so the IPA image is already here, so
 # we don't need to download it
-if [ -e /usr/share/rhosp-director-images/ironic-python-agent-latest.tar ] ; then
-    VERSION=$(cat /usr/share/rhosp-director-images/version-latest.txt)
-    if [ ! -e $FILENAME-$VERSION ] ; then
-        cd $TMPDIR
-        tar -xf /usr/share/rhosp-director-images/ironic-python-agent-latest.tar
-        chmod 755 $TMPDIR
-        cd -
-        mv $TMPDIR $FILENAME-$VERSION
-    fi
-    ln -sf $FILENAME-$VERSION/$FILENAME.initramfs $FILENAME.initramfs
-    ln -sf $FILENAME-$VERSION/$FILENAME.kernel $FILENAME.kernel
+if [[ -e /var/tmp/$FILENAME.initramfs && \
+      -e /var/tmp/$FILENAME.kernel ]] ; then
+    mv /var/tmp/$FILENAME.initramfs $FILENAME.initramfs
+    mv /var/tmp/$FILENAME.kernel $FILENAME.kernel
+    mv /var/tmp/ipa-ramdisk-pkgs.info ipa-ramdisk-pkgs.info
     exit 0
 fi
 
