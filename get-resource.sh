@@ -19,10 +19,11 @@ cd /shared/html/images
 # we don't need to download it
 if [[ -e /var/tmp/$FILENAME.initramfs && \
       -e /var/tmp/$FILENAME.kernel ]] ; then
-    mv /var/tmp/$FILENAME.initramfs $FILENAME.initramfs
-    mv /var/tmp/$FILENAME.kernel $FILENAME.kernel
-    mv /var/tmp/ipa-ramdisk-image.info ipa-ramdisk-image.info
-    mv /var/tmp/ipa-ramdisk-pkgs-list.txt ipa-ramdisk-pkgs-list.txt
+    cp /var/tmp/$FILENAME.initramfs $FILENAME.initramfs
+    cp /var/tmp/$FILENAME.kernel $FILENAME.kernel
+    cp /var/tmp/ipa-ramdisk-image.info ipa-ramdisk-image.info
+    cp /var/tmp/ipa-ramdisk-pkgs-list.txt ipa-ramdisk-pkgs-list.txt
+    rm -f /var/tmp/{ipa-ramdisk-image.info,ipa-ramdisk-pkgs-list.txt,ironic-python-agent.initramfs,ironic-python-agent.kernel}
     exit 0
 fi
 
