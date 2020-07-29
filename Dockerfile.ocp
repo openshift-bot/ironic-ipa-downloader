@@ -6,11 +6,18 @@ FROM ironic-builder AS builder
 
 COPY ./build-ipa.sh /usr/local/bin/build-ipa.sh
 
-RUN dnf update -y && \
-    dnf install -y cpio dracut && \
+RUN dnf upgrade -y && \
+    dnf install -y \
+      cpio \
+      dracut \
+      && \
     dnf download --destdir /tmp/packages \
-      rhosp-director-images-ipa-$(uname -m) python3-ironic-lib \
-      python3-ironic-python-agent openstack-ironic-python-agent && \
+      openstack-ironic-python-agent \
+      python3-bcrypt \
+      python3-ironic-lib \
+      python3-ironic-python-agent \
+      rhosp-director-images-ipa-$(uname -m) \
+      && \
     rpm -i --nodeps /tmp/packages/rhosp-director-images-ipa-*.rpm && \
     chmod +x /usr/local/bin/build-ipa.sh && \
     /usr/local/bin/build-ipa.sh && \
