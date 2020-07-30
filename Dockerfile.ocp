@@ -5,23 +5,15 @@ FROM ironic-builder AS builder
 # much as possible
 
 COPY ./build-ipa.sh /usr/local/bin/build-ipa.sh
+COPY ./chrooted.sh /usr/local/bin/chrooted.sh
 
 RUN dnf upgrade -y && \
-    dnf install -y \
-      cpio \
-      dracut \
-      && \
-    dnf download --destdir /tmp/packages \
-      openstack-ironic-python-agent \
-      python3-bcrypt.$(uname -m) \
-      python3-ironic-lib \
-      python3-ironic-python-agent \
-      rhosp-director-images-ipa-$(uname -m) \
-      && \
+    dnf install -y cpio dracut && \
+    dnf download --destdir /tmp/packages rhosp-director-images-ipa-$(uname -m) && \
     rpm -i --nodeps /tmp/packages/rhosp-director-images-ipa-*.rpm && \
     chmod +x /usr/local/bin/build-ipa.sh && \
     /usr/local/bin/build-ipa.sh && \
-    rpm -q --queryformat "%{NAME} %{VERSION} %{RELEASE} %{ARCH}\n" /tmp/packages/*.rpm > /var/tmp/ipa-ramdisk-pkgs.info && \
+    rpm -q --queryformat "%{NAME} %{VERSION} %{RELEASE} %{ARCH}\n" /tmp/packages/rhosp-director-images-ipa-*.rpm > /var/tmp/ipa-ramdisk-image.info && \
     rm -rf /tmp/packages && \
     dnf remove -y rhosp-director-images-ipa-$(uname -m) && \
     dnf clean all && \
@@ -29,7 +21,8 @@ RUN dnf upgrade -y && \
 
 FROM ubi8
 
-COPY --from=builder /var/tmp/ipa-ramdisk-pkgs.info /var/tmp/
+COPY --from=builder /var/tmp/ipa-ramdisk-image.info /var/tmp/
+COPY --from=builder /var/tmp/ipa-ramdisk-pkgs-list.txt /var/tmp/
 COPY --from=builder /var/tmp/ironic-python-agent.initramfs /var/tmp/
 COPY --from=builder /var/tmp/ironic-python-agent.kernel /var/tmp/
 
