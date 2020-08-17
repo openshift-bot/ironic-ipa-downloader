@@ -13,7 +13,7 @@ RUN dnf upgrade -y && \
       && \
     dnf download --destdir /tmp/packages \
       openstack-ironic-python-agent \
-      python3-bcrypt \
+      python3-bcrypt.$(uname -m) \
       python3-ironic-lib \
       python3-ironic-python-agent \
       rhosp-director-images-ipa-$(uname -m) \
