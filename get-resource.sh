@@ -21,7 +21,8 @@ if [[ -e /var/tmp/$FILENAME.initramfs && \
       -e /var/tmp/$FILENAME.kernel ]] ; then
     mv /var/tmp/$FILENAME.initramfs $FILENAME.initramfs
     mv /var/tmp/$FILENAME.kernel $FILENAME.kernel
-    mv /var/tmp/ipa-ramdisk-pkgs.info ipa-ramdisk-pkgs.info
+    mv /var/tmp/ipa-ramdisk-image.info ipa-ramdisk-image.info
+    mv /var/tmp/ipa-ramdisk-pkgs-list.txt ipa-ramdisk-pkgs-list.txt
     exit 0
 fi
 
