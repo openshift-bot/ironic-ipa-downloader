@@ -1,0 +1,4 @@
+openstack-ironic-python-agent
+python3-ironic-python-agent
+python3-ironic-lib
+
