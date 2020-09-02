@@ -6,6 +6,7 @@ FROM registry.svc.ci.openshift.org/ocp/builder:rhel-8-base-openshift-4.6 AS buil
 
 COPY ./build-ipa.sh /usr/local/bin/build-ipa.sh
 COPY ./chrooted.sh /usr/local/bin/chrooted.sh
+COPY ./ipa-ramdisk-packages-list.txt /tmp/ipa-ramdisk-packages-list.txt
 
 RUN dnf upgrade -y && \
     dnf install -y cpio dracut && \
