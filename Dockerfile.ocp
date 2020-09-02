@@ -4,9 +4,12 @@ FROM registry.svc.ci.openshift.org/ocp/builder:rhel-8-base-openshift-4.6 AS buil
 # use rpm to install without them to keep the image size down as
 # much as possible
 
+ARG PKGS_LIST=main-packages-list.txt
+ENV PKGS_LIST_DST=/tmp/${PKGS_LIST}
+
 COPY ./build-ipa.sh /usr/local/bin/build-ipa.sh
 COPY ./chrooted.sh /usr/local/bin/chrooted.sh
-COPY ./ipa-ramdisk-packages-list.txt /tmp/ipa-ramdisk-packages-list.txt
+COPY ${PKGS_LIST} ${PKGS_LIST_DST}
 
 RUN dnf upgrade -y && \
     dnf install -y cpio dracut && \

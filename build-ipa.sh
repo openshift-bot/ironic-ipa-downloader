@@ -23,7 +23,7 @@ cp /etc/resolv.conf etc/resolv.conf
 mv etc/yum.repos.d/* .
 cp /etc/yum.repos.d/* etc/yum.repos.d/
 cp /usr/local/bin/chrooted.sh .
-cp /tmp/ipa-ramdisk-packages-list.txt tmp/
+cp ${PKGS_LIST_DST} tmp/
 
 # Modify the ipa-ramdisk in chroot
 chroot . ./chrooted.sh

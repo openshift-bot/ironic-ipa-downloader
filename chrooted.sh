@@ -1,7 +1,7 @@
 set -ex
 
 # Install the packages we need in the ipa-ramdisk
-dnf --best install -y $(cat /tmp/ipa-ramdisk-packages-list.txt)
+dnf --best install -y $(cat ${PKGS_LIST_DST})
 
 # Update netconfig to use MAC for DUID/IAID combo (same as RHCOS)
 # FIXME: we need an alternative of this packaged
@@ -19,4 +19,4 @@ rm -rf /var/cache/{yum,dnf}/*
 rm -f /etc/resolv.conf
 rm -f /etc/yum.repos.d/*
 mv /*.repo /etc/yum.repos.d/
-rm -f /tmp/ipa-ramdisk-packages-list.txt
+rm -f ${PKGS_LIST_DST}
