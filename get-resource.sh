@@ -21,9 +21,8 @@ if [[ -e /var/tmp/$FILENAME.initramfs && \
       -e /var/tmp/$FILENAME.kernel ]] ; then
     cp /var/tmp/$FILENAME.initramfs $FILENAME.initramfs
     cp /var/tmp/$FILENAME.kernel $FILENAME.kernel
-    cp /var/tmp/ipa-ramdisk-image.info ipa-ramdisk-image.info
-    cp /var/tmp/ipa-ramdisk-pkgs-list.txt ipa-ramdisk-pkgs-list.txt
-    rm -f /var/tmp/{ipa-ramdisk-image.info,ipa-ramdisk-pkgs-list.txt,ironic-python-agent.initramfs,ironic-python-agent.kernel}
+    cp /var/tmp/$FILENAME.manifest $FILENAME.manifest
+    rm -f /var/tmp/{ironic-python-agent.initramfs,ironic-python-agent.kernel,ironic-python-agent.manifest}
     exit 0
 fi
 
