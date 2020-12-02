@@ -13,6 +13,9 @@ chmod +x /etc/NetworkManager/dispatcher.d/01-hostname
 # Provide a list of packages installed in the ipa-ramdisk
 rpm -qa | sort > ipa-ramdisk-pkgs-list.txt
 
+#HACK: Apply https://github.com/eventlet/eventlet/commit/45019326b68d6a151745056bdc418b8062399606
+sed -ie '/set_nonblocking(newsock)/d' /usr/lib/python3.6/site-packages/eventlet/green/ssl.py
+
 # Cleaning steps
 dnf clean all
 rm -rf /var/cache/{yum,dnf}/*
