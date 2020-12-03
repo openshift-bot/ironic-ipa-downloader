@@ -7,7 +7,7 @@ dnf --best install -y $(cat ${PKGS_LIST_DST})
 # FIXME: we need an alternative of this packaged
 mkdir -p /etc/NetworkManager/conf.d /etc/NetworkManager/dispatcher.d
 echo -e '[main]\ndhcp=dhclient\n[connection]\nipv6.dhcp-duid=ll' > /etc/NetworkManager/conf.d/clientid.conf
-echo -e '[[ "$DHCP6_FQDN_FQDN" =~ - ]] && [[ "$(hostname)" == localhost.localdomain ]] && hostname $DHCP6_FQDN_FQDN' > /etc/NetworkManager/dispatcher.d/01-hostname
+echo -e '[[ "$DHCP6_FQDN_FQDN" =~ "." ]] && hostname $DHCP6_FQDN_FQDN' > /etc/NetworkManager/dispatcher.d/01-hostname
 chmod +x /etc/NetworkManager/dispatcher.d/01-hostname
 
 # Provide a list of packages installed in the ipa-ramdisk
