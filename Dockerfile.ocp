@@ -1,33 +1,17 @@
 FROM registry.svc.ci.openshift.org/ocp/builder:rhel-8-base-openshift-4.6 AS builder
 
-# We don't need the deps that rhosp-director-images-ipa pulls in
-# use rpm to install without them to keep the image size down as
-# much as possible
-
-ARG PKGS_LIST=main-packages-list.txt
-ENV PKGS_LIST_DST=/tmp/${PKGS_LIST}
-
-COPY ./build-ipa.sh /usr/local/bin/build-ipa.sh
-COPY ./chrooted.sh /usr/local/bin/chrooted.sh
-COPY ${PKGS_LIST} ${PKGS_LIST_DST}
+ENV IMAGE_PATH=/usr/share/ironic-images
 
 RUN dnf upgrade -y && \
-    dnf install -y cpio dracut && \
-    dnf download --destdir /tmp/packages rhosp-director-images-ipa-$(uname -m) && \
-    rpm -i --nodeps /tmp/packages/rhosp-director-images-ipa-*.rpm && \
-    chmod +x /usr/local/bin/build-ipa.sh && \
-    /usr/local/bin/build-ipa.sh && \
-    rpm -q --queryformat "%{NAME} %{VERSION} %{RELEASE} %{ARCH}\n" /tmp/packages/rhosp-director-images-ipa-*.rpm > /var/tmp/ipa-ramdisk-image.info && \
-    rm -rf /tmp/packages && \
-    dnf remove -y rhosp-director-images-ipa-$(uname -m) && \
+    dnf install -y "ironic-images-ipa-$(uname -m) >= 15.1-20201201.1.el8" && \
+    tar -C /var/tmp/ -xvf ${IMAGE_PATH}/ironic-python-agent*.$(uname -m).tar && \
     dnf clean all && \
     rm -rf /var/cache/{yum,dnf}/*
 
 FROM registry.svc.ci.openshift.org/ocp/builder:rhel-8-base-openshift-4.6
 
-COPY --from=builder /var/tmp/ipa-ramdisk-image.info /var/tmp/
-COPY --from=builder /var/tmp/ipa-ramdisk-pkgs-list.txt /var/tmp/
 COPY --from=builder /var/tmp/ironic-python-agent.initramfs /var/tmp/
 COPY --from=builder /var/tmp/ironic-python-agent.kernel /var/tmp/
+COPY --from=builder /var/tmp/ironic-python-agent.manifest /var/tmp/
 
 COPY ./get-resource.sh /usr/local/bin/get-resource.sh
